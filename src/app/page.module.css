@@ -1,0 +1,17 @@
+.pageHeaderBox {
+    background-image: url('../../public/app-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+.pageHeaderBox::after {
+    content: "";
+    border-top: 20px solid transparent;
+    border-left: 20px solid #343636;
+    border-bottom: 20px solid transparent;
+    position: absolute;
+    bottom: -29px;
+    transform: rotate(90deg);
+    left: 49.4%;
+}
