@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
     const { text, targetLang } = await request.json();
-    const deeplApiUrl = 'https://cors-anywhere.herokuapp.com/https://api-free.deepl.com/v2/translate';
+    const deeplApiUrl = 'https://api-free.deepl.com/v2/translate';
     const apiKey = process.env.DEEPL_API_KEY;
 
     if (!apiKey) {

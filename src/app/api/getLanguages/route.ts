@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-    const deeplApiUrl = 'https://cors-anywhere.herokuapp.com/https://api-free.deepl.com/v2/languages?type=target';
+    const deeplApiUrl = 'https://api-free.deepl.com/v2/languages?type=target';
     const apiKey = process.env.DEEPL_API_KEY;
 
     if (!apiKey) {
