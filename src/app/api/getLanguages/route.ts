@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
     const deeplApiUrl = 'https://api-free.deepl.com/v2/languages?type=target';
-    const apiKey = "03a9456b-2f23-4dd3-b4cb-957077270a62:fx";
+    const apiKey = process.env.DEEPL_API_KEY;
 
     if (!apiKey) {
         return NextResponse.json({ error: 'API key not found' }, { status: 500 });
