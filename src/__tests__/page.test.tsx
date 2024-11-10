@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Translator from './page';
-import { Language } from './types';
+import Translator from '../app/page';
+import { Language } from '../app/types';
 import test, { describe } from 'node:test';
 
 // Mocking global fetch function

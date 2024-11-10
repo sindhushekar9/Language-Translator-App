@@ -35,15 +35,7 @@ export default function Translator() {
     jokeSkeleton: false,
   });
 
-  // Initial data load
-  useEffect(() => {
-    async function initializeData() {
-      await Promise.all([fetchJoke(), fetchLanguages()]);
-    }
-    initializeData();
-  }, []);
-
-  // fetch and set available languages
+  // Fetch and set available languages
   const fetchLanguages = useCallback(async () => {
     try {
       const response = await fetch('/api/getLanguages');
@@ -58,58 +50,52 @@ export default function Translator() {
   }, []);
 
   // Consolidated function to format both single and multiple jokes
-  const formatJokes = (jokes: any | any[]) => {
+  const formatJokes = (jokes: any | any[]): string[] => {
     if (Array.isArray(jokes)) {
-      return jokes.map(x => {
-        if (x.type === 'twopart' && x.setup && x.delivery) {
-          return `${x.setup}\n${x.delivery}\n\n`;
-        } else if (x.joke) {
-          return `${x.joke}\n\n`;
-        }
-        return "No joke found.";
-      });
-    } else {
-      if (jokes.type === 'twopart' && jokes.setup && jokes.delivery) {
-        return [`${jokes.setup}\n${jokes.delivery}\n\n`];
-      } else if (jokes.joke) {
-        return [`${jokes.joke}\n\n`];
-      }
-      return ["No joke found."];
+      return jokes.map(x =>
+        x.type === 'twopart' && x.setup && x.delivery
+          ? `${x.setup}\n${x.delivery}\n\n`
+          : x.joke
+            ? `${x.joke}\n\n`
+            : "No joke found."
+      );
     }
+    return jokes.type === 'twopart' && jokes.setup && jokes.delivery
+      ? [`${jokes.setup}\n${jokes.delivery}\n\n`]
+      : jokes.joke
+        ? [`${jokes.joke}\n\n`]
+        : ["No joke found."];
   };
 
-  //Fetch and set joke(s)
+  // Fetch and set joke(s)
   const fetchJoke = useCallback(async () => {
     setState(prevState => ({ ...prevState, jokeSkeleton: true }));
     try {
       const response = await fetch("https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,explicit&amount=2");
       const data: JokeResponse = await response.json();
 
-      let jokes: string[] = [];
-      if (data.amount && data.amount > 1) {
-        jokes = formatJokes(data.jokes);
-      } else {
-        jokes = formatJokes(data);
-      }
+      const jokes = data.amount && data.amount > 1
+        ? formatJokes(data.jokes)
+        : formatJokes(data);
 
       setState(prevState => ({
         ...prevState,
         allJoke: jokes,
         translatedJoke: "",
         selectedLanguage: null,
-        jokeSkeleton: false
+        jokeSkeleton: false,
       }));
     } catch (error) {
       console.error("Error fetching joke:", error);
       setState(prevState => ({
         ...prevState,
         joke: "Failed to fetch joke. Please try again.",
-        jokeSkeleton: false
+        jokeSkeleton: false,
       }));
     }
   }, []);
 
-  //Translate joke(s) to another language
+  // Translate joke(s) to another language
   const translateJoke = useCallback(async () => {
     const { selectedLanguage, allJoke } = state;
     if (!selectedLanguage) {
@@ -143,6 +129,19 @@ export default function Translator() {
     },
     []
   );
+
+  // Initial data load
+  useEffect(() => {
+    const initializeData = async () => {
+      try {
+        await Promise.all([fetchJoke(), fetchLanguages()]);
+      } catch (error) {
+        console.error("Error initializing data:", error);
+      }
+    };
+    initializeData();
+  }, [fetchJoke, fetchLanguages]);
+
 
   // UI Content
   return (
