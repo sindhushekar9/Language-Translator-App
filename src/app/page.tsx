@@ -82,7 +82,7 @@ export default function Translator() {
   const fetchJoke = useCallback(async () => {
     setState(prevState => ({ ...prevState, jokeSkeleton: true }));
     try {
-      const response = await fetch("https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,explicit&amount=10");
+      const response = await fetch("https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,explicit&amount=2");
       const data: JokeResponse = await response.json();
 
       let jokes: string[] = [];
